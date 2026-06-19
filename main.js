@@ -167,7 +167,7 @@ class DuoFernStickAdapter extends utils.Adapter {
                 await new Promise((resolve, reject) => {
                     this.port.write(buf, err => err ? reject(err) : resolve());
                 });
-                await new Promise(resolve => setTimeout(resolve, 250));
+                await delay(250);
             }
         } finally {
             this.sending = false;

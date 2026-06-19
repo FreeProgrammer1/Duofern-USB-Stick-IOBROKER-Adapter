@@ -16,17 +16,17 @@
       "zh-cn": "DuoFern Stick"
     },
     "desc": {
-      "en": "Adapter for the Rademacher DuoFern USB Stick with persistent state handling.",
+      "en": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
       "de": "Adapter für den Rademacher DuoFern USB-Stick mit persistenter Statusverarbeitung.",
-      "ru": "Адаптер для USB-стика Rademacher DuoFern с постоянной обработкой состояний.",
-      "pt": "Adaptador para o stick USB Rademacher DuoFern com tratamento persistente de estados.",
-      "nl": "Adapter voor de Rademacher DuoFern USB-stick met blijvende statusverwerking.",
-      "fr": "Adaptateur pour la clé USB Rademacher DuoFern avec gestion persistante des états.",
-      "it": "Adattatore per la chiavetta USB Rademacher DuoFern con gestione persistente degli stati.",
-      "es": "Adaptador para el USB Stick Rademacher DuoFern con gestión persistente de estados.",
-      "pl": "Adapter do pamięci USB Rademacher DuoFern z trwałą obsługą stanów.",
-      "uk": "Адаптер для USB-стика Rademacher DuoFern зі сталою обробкою станів.",
-      "zh-cn": "用于 Rademacher DuoFern USB Stick 的适配器，支持持久状态处理。"
+      "ru": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "pt": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "nl": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "fr": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "it": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "es": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "pl": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "uk": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "zh-cn": "Adapter for Rademacher DuoFern USB stick with persistent state handling."
     },
     "authors": [
       "FreeProgrammer1"
@@ -36,7 +36,9 @@
       "rademacher",
       "rollotron",
       "shutter",
-      "rohrmotor"
+      "blinds",
+      "serialport",
+      "smart-home"
     ],
     "platform": "Javascript/Node.js",
     "mode": "daemon",
@@ -59,28 +61,29 @@
     ],
     "globalDependencies": [
       {
-        "admin": ">=7.6.17"
+        "admin": ">=7.6.20"
       }
     ],
     "restartAdapters": [],
+    "tier": 3,
     "licenseInformation": {
       "type": "free",
-      "license": "MIT"
+      "license": "MIT",
+      "link": "https://github.com/FreeProgrammer1/ioBroker.duofernstick/blob/main/LICENSE"
     },
-    "tier": 3,
     "news": {
       "0.1.21": {
-        "en": "Initial public test package with serial communication, device detection, state handling, and basic commands.",
-        "de": "Erstes öffentliches Testpaket mit serieller Kommunikation, Geräteerkennung, Statusverarbeitung und grundlegenden Befehlen.",
-        "ru": "Первый публичный тестовый пакет с последовательной связью, обнаружением устройств, обработкой состояний и базовыми командами.",
-        "pt": "Primeiro pacote público de teste com comunicação serial, detecção de dispositivos, tratamento de estados e comandos básicos.",
-        "nl": "Eerste openbaar testpakket met seriële communicatie, apparaatdetectie, statusverwerking en basisopdrachten.",
-        "fr": "Premier paquet de test public avec communication série, détection des appareils, gestion des états et commandes de base.",
-        "it": "Primo pacchetto di test pubblico con comunicazione seriale, rilevamento dei dispositivi, gestione degli stati e comandi di base.",
-        "es": "Primer paquete público de prueba con comunicación serie, detección de dispositivos, gestión de estados y comandos básicos.",
-        "pl": "Pierwszy publiczny pakiet testowy z komunikacją szeregową, wykrywaniem urządzeń, obsługą stanów i podstawowymi poleceniami.",
-        "uk": "Перший публічний тестовий пакет із послідовним зв’язком, виявленням пристроїв, обробкою станів і базовими командами.",
-        "zh-cn": "首个公开测试包，包含串口通信、设备检测、状态处理和基本命令。"
+        "en": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "de": "Erste öffentliche Testversion mit serieller Kommunikation, Geräteanlage und DuoFern-Statusverarbeitung.",
+        "ru": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "pt": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "nl": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "fr": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "it": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "es": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "pl": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "uk": "Initial public test version with serial communication, device creation and DuoFern state handling.",
+        "zh-cn": "Initial public test version with serial communication, device creation and DuoFern state handling."
       }
     }
   },

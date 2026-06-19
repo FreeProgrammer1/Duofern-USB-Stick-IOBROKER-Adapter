@@ -1,19 +1,20 @@
 {
   "name": "iobroker.duofernstick",
   "version": "0.1.21",
-  "description": "ioBroker adapter for the Rademacher DuoFern USB Stick",
+  "description": "ioBroker adapter for Rademacher DuoFern USB Stick",
   "main": "main.js",
   "scripts": {
     "test": "node test/state-update.test.js",
-    "check": "node --check main.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check lib/commands.js"
+    "check": "node --check main.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check lib/commands.js && node --check admin/words.js"
   },
   "keywords": [
-    "ioBroker",
+    "iobroker",
+    "iobroker-adapter",
     "duofern",
-    "Rademacher",
-    "HomePilot",
-    "RolloTron",
-    "shutter",
+    "rademacher",
+    "rollotron",
+    "homepilot",
+    "serialport",
     "smart-home"
   ],
   "author": "FreeProgrammer1",
@@ -23,11 +24,11 @@
     "serialport": "^12.0.0"
   },
   "devDependencies": {
-    "@iobroker/testing": "5.2.2",
-    "@types/node": ">=20"
+    "@iobroker/testing": "^5.2.2",
+    "@types/node": "^22.15.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,7 @@
   "bugs": {
     "url": "https://github.com/FreeProgrammer1/ioBroker.duofernstick/issues"
   },
-  "homepage": "https://github.com/FreeProgrammer1/ioBroker.duofernstick#readme",
+  "homepage": "https://github.com/FreeProgrammer1/ioBroker.duofernstick",
   "files": [
     "admin",
     "lib",

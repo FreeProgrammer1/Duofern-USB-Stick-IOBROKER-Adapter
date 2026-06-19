@@ -1,38 +1,37 @@
 # ioBroker Adapter: DuoFern Stick
 
-This adapter connects the **Rademacher DuoFern USB Stick** to ioBroker.
-
-It is intended for local DuoFern installations where devices should be detected, monitored, and controlled directly through the USB stick without a cloud service.
+This adapter connects a local **Rademacher DuoFern USB Stick** to ioBroker. It is designed for installations where DuoFern devices should be integrated locally without an additional cloud service.
 
 ## Features
 
 - Serial connection to the Rademacher DuoFern USB Stick
-- Configuration of serial port, baud rate, and dongle serial in the ioBroker Admin UI
+- Configuration of serial port, baud rate and dongle serial in ioBroker Admin
 - Reception and parsing of DuoFern telegrams
-- Automatic creation of detected DuoFern devices below `devices.*`
-- Device type catalogue for many DuoFern device classes
-- Persistent state handling for incomplete telegrams
-- Device states for position, movement, direction, running time, automatic modes, and raw telegrams
-- Control states for pairing, unpairing, status broadcast, and raw telegram transmission
-- Optional raw telegram logging for debugging
+- Automatic creation of detected devices below `devices.*`
+- Device and capability catalogue for many DuoFern device classes
+- State handling for shutters, tubular motors, actuators, dimmers, sensors, remotes and thermostats
+- Control states for pairing, unpairing, status broadcast and raw telegrams
+- Partial state updates to avoid overwriting existing values with incomplete telegram data
+- Protection against unintended reset of `runningTime` to `0`
+- Optional raw telegram logging for diagnostics
 
 ## Supported device classes
 
-The adapter contains a device and capability catalogue for several DuoFern classes, including:
+The adapter contains a device and capability catalogue for several DuoFern device classes, including:
 
 | Device class | Examples |
 | --- | --- |
-| Roller shutters and belt winders | RolloTron Standard, RolloTron Comfort |
+| Shutters / belt winders | RolloTron Standard, RolloTron Comfort Master/Slave |
 | Tubular motors | Tubular motor, tubular motor actuator, tubular motor controller |
-| Venetian blinds | Troll devices and blind-related actuators |
-| Actuators | Universal actuator, socket actuator, switching actuators |
-| Dimmers | DuoFern dimming actuators and dimmers |
-| Sensors | Sun sensor, wind sensor, environmental sensor, motion detector, smoke detector, window or door contact |
-| Remotes and transmitters | Handheld transmitters, wall buttons, timers, flush-mounted transmitters |
-| Heating devices | Room thermostat and radiator actuator |
-| Gate and special devices | SX5 and gate-related devices |
+| Venetian blinds | Troll Comfort, Troll Basis, Connect actuator |
+| Actuators | Universal actuator, socket actuator, light and switching actuators |
+| Dimmers | Dimming actuator, dimmer |
+| Sensors | Sun/wind sensor, environmental sensor, motion detector, smoke detector, window/door contact |
+| Remotes / transmitters | Hand transmitter, wall switch, HomeTimer, flush-mounted transmitter |
+| Heating | Room thermostat, radiator actuator |
+| Gate / special devices | SX5 / gate controller |
 
-Only suitable or observed states are created for a detected device where possible. This avoids creating every theoretical datapoint for every device.
+Depending on the detected device type, only suitable or observed states are created. This avoids showing every theoretical state for every device.
 
 ## Requirements
 
@@ -42,34 +41,30 @@ Only suitable or observed states are created for a detected device where possibl
 - Rademacher DuoFern USB Stick
 - Access to the serial device of the USB stick
 
-On Linux, the ioBroker process must have permission to access the serial device. Typical device paths are:
+On Linux, the ioBroker process must have permission to access the serial device. Common paths are:
 
 ```text
 /dev/ttyUSB0
 /dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick-if00-port0
 ```
 
-The stable path below `/dev/serial/by-id/` is recommended because it usually remains unchanged after reconnecting the stick or restarting the host.
+Using the stable `/dev/serial/by-id/` path is recommended because it normally stays the same after rebooting or reconnecting the USB stick.
 
 ## Installation
 
-Install the adapter through the ioBroker Admin interface.
+Install the adapter through ioBroker Admin using the custom adapter installation from a GitHub URL or from an uploaded package file.
 
-Recommended ways:
+After installation:
 
-1. Open **ioBroker Admin**.
-2. Open **Adapters**.
-3. Use the GitHub or custom installation option.
-4. Enter the GitHub repository URL or the release asset URL for the `.tgz` package.
-5. Create an instance of `duofernstick`.
-6. Open the instance configuration and enter the correct serial port.
-7. Start the adapter and check `duofernstick.0.info.connection`.
-
-Direct package-manager commands are intentionally not documented here because ioBroker adapters should be installed through the ioBroker Admin or ioBroker adapter installation workflow.
+1. Create an adapter instance named `duofernstick.0`.
+2. Open the adapter configuration.
+3. Enter the correct serial port of the DuoFern USB Stick.
+4. Start the adapter.
+5. Check the connection state at `duofernstick.0.info.connection`.
 
 ## Configuration
 
-The most important settings are available in the instance configuration.
+The main settings are available in the Admin configuration page of the adapter instance.
 
 | Setting | Description |
 | --- | --- |
@@ -78,13 +73,13 @@ The most important settings are available in the instance configuration.
 | `dongleSerial` | Serial number of the DuoFern stick, usually starting with `6F` |
 | `autoCreateDevices` | Automatically create detected devices |
 | `statusOnStart` | Request device status when the adapter starts |
-| `preserveUnknownValues` | Keep existing values when a telegram is incomplete |
-| `createOnlySupportedStates` | Create only supported or observed states per device |
-| `debugRaw` | Log raw telegrams for debugging |
+| `preserveUnknownValues` | Preserve existing values when incoming telegrams are incomplete |
+| `createOnlySupportedStates` | Create only suitable or observed states per device |
+| `debugRaw` | Log raw telegrams for diagnostics |
 
 ## Object structure
 
-After startup, the adapter creates the following main object structure:
+The adapter creates the following main object tree:
 
 ```text
 duofernstick.0
@@ -113,7 +108,7 @@ duofernstick.0
         └── ...
 ```
 
-The exact number of states depends on the detected device type and on observed telegrams.
+The exact number of states depends on the detected device type.
 
 ## Central control states
 
@@ -123,7 +118,7 @@ The exact number of states depends on the detected device type and on observed t
 duofernstick.0.control.pair = true
 ```
 
-Starts pairing mode.
+Starts pairing mode of the stick.
 
 ### Start unpairing
 
@@ -131,123 +126,134 @@ Starts pairing mode.
 duofernstick.0.control.unpair = true
 ```
 
-Starts unpairing mode.
+Starts unpairing mode of the stick.
 
-### Request status broadcast
+### Send status broadcast
 
 ```text
 duofernstick.0.control.statusBroadcast = true
 ```
 
-Requests a status update from known or reachable devices.
+Requests status information from known or reachable devices.
 
-### Send a raw telegram
+### Send raw telegram
 
 ```text
 duofernstick.0.control.raw = <HEX_TELEGRAM>
 ```
 
-Sends a raw hexadecimal telegram through the stick. This is mainly intended for testing and debugging.
+Sends a raw telegram as a hexadecimal string. This is mainly intended for diagnostics and development.
 
-## Device control states
+## Device control
 
-Depending on the device type, the following states may be available:
+Depending on the device type, the following writable states may be available:
 
 | State | Meaning |
 | --- | --- |
-| `up` | Move blind or shutter up |
-| `down` | Move blind or shutter down |
-| `stop` | Stop the current movement |
+| `up` | Move shutter or blind up |
+| `down` | Move shutter or blind down |
+| `stop` | Stop current movement |
 | `toggle` | Toggle command |
 | `position` | Target position in percent |
-| `getStatus` | Request status from this device |
+| `getStatus` | Request device status |
 | `manualMode` | Manual mode |
-| `timeAutomatic` | Time automatic mode |
-| `sunAutomatic` | Sun automatic mode |
-| `duskAutomatic` | Dusk automatic mode |
-| `dawnAutomatic` | Dawn automatic mode |
-| `windAutomatic` | Wind automatic mode |
-| `rainAutomatic` | Rain automatic mode |
-| `level` | Dimming or level value |
-| `state` | Switching state |
+| `timeAutomatic` | Time automation |
+| `sunAutomatic` | Sun automation |
+| `duskAutomatic` | Dusk automation |
+| `dawnAutomatic` | Dawn automation |
+| `windAutomatic` | Wind automation |
+| `rainAutomatic` | Rain automation |
+| `level` | Dimming or switching level |
+| `state` | Switch state |
 
-## Status states
+Example state IDs:
 
-Typical status states are:
+```text
+duofernstick.0.devices.<deviceId>.up
+duofernstick.0.devices.<deviceId>.down
+duofernstick.0.devices.<deviceId>.stop
+duofernstick.0.devices.<deviceId>.position
+```
+
+## Status values
+
+Typical read-only status values are:
 
 | State | Description |
 | --- | --- |
 | `position` | Current position in percent |
-| `moving` | Device is moving |
-| `direction` | Movement direction such as `up`, `down`, `stop`, or `unknown` |
-| `runningTime` | Running time in seconds |
+| `moving` | Device is currently moving |
+| `direction` | Movement direction: `up`, `down`, `stop` or `unknown` |
+| `runningTime` | Runtime in seconds |
 | `lastSeen` | Timestamp of the last received telegram |
 | `rawTelegram` | Last telegram received from this device |
 | `deviceType` | DuoFern device type code |
 | `deviceTypeName` | Detected device name |
 
-Incoming telegrams are handled as partial updates. If a telegram does not contain a certain value, an already existing ioBroker state is not reset automatically.
+Incoming telegrams are handled as partial state updates. If a telegram does not contain a runtime value, an already existing runtime value is not automatically reset to `0`.
 
 ## Troubleshooting
 
-### The adapter does not connect to the USB stick
+### The adapter does not connect to the stick
 
 Check the following points:
 
 - The configured serial port exists.
-- The ioBroker process has permission to access the serial device.
-- The USB stick is connected to the correct host or virtual machine.
-- No other process is blocking the serial port.
-- The configured baud rate is correct.
+- The ioBroker user has permission to access the serial device.
+- The USB stick is passed through to the correct host, container or virtual machine.
+- No other process blocks the serial port.
+- The baud rate is configured correctly.
 
 Useful Linux commands:
 
 ```text
 ls -l /dev/ttyUSB*
 ls -l /dev/serial/by-id/
+dmesg | grep -i tty
 ```
 
-### Devices are not created
+### No devices are created
 
 Check the following points:
 
-- The adapter is connected to the stick.
 - `autoCreateDevices` is enabled.
-- A DuoFern device sends a telegram or is paired.
-- Raw telegram logging can be enabled temporarily for debugging.
+- Raw telegrams appear in `info.lastRawTelegram`.
+- `debugRaw` is enabled for diagnostics.
+- A DuoFern device or remote control action has been triggered.
 
-### State values are incomplete
+### Values look unstable or implausible
 
-DuoFern telegrams may contain only partial device information. The adapter preserves existing values when a telegram does not contain a new value for a specific state.
+Check the following points:
 
-## Development
+- Whether several devices are detected with the same or an incorrect ID.
+- Whether raw telegrams are received completely.
+- Whether the correct device type is detected.
+- Whether the device actively sends status values or only answers once after startup.
 
-The adapter source contains the main adapter runtime in `main.js` and protocol-related helper modules below `lib/`.
+For diagnostics, the following information is useful:
 
-Useful local checks:
-
-```text
-node --check main.js
-node --check lib/duofern-parser.js
-node --check lib/state-manager.js
-node --check lib/device-types.js
-node --check lib/commands.js
-```
+- Adapter version
+- ioBroker version
+- Node.js version
+- Operating system, Docker, VM or Proxmox setup
+- Serial device path of the USB stick
+- DuoFern device type
+- Relevant raw telegrams
+- ioBroker log output during startup and device actions
 
 ## Changelog
 
 ### 0.1.21
 
-- Added serial communication structure for the DuoFern USB Stick
-- Added parser and frame extraction logic
-- Added persistent state update handling
-- Added automatic device creation
-- Added central control states
-- Added support catalogue for multiple DuoFern device classes
-- Added Admin UI configuration
+- Extended device and capability catalogue
+- Automatic device creation below `devices.*`
+- Admin configuration for serial port, baud rate, dongle serial and debug options
+- Partial update handling for incoming telegrams
+- Protection against overwriting missing values
+- Protection against unintended reset of `runningTime` to `0`
+- Control states for pairing, unpairing, status broadcast and raw telegrams
+- Control states for shutter, actuator, dimmer, sensor and thermostat classes
 
 ## License
 
-MIT License
-
-Copyright (c) 2026 FreeProgrammer1
+MIT
