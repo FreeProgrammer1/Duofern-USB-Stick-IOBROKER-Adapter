@@ -1,7 +1,0 @@
-.git/
-.github/
-.vscode/
-test/
-coverage/
-node_modules/
-*.tgz
