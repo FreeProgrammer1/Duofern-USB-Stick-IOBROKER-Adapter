@@ -14,7 +14,7 @@
     "HomePilot",
     "RolloTron"
   ],
-  "author": "Geht Euch",
+  "author": "FreeProgrammer1",
   "license": "MIT",
   "dependencies": {
     "@iobroker/adapter-core": "^3.1.4",
