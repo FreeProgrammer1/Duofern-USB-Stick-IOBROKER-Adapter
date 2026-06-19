@@ -4,14 +4,32 @@
     "version": "0.1.21",
     "titleLang": {
       "en": "DuoFern Stick",
-      "de": "DuoFern Stick"
+      "de": "DuoFern Stick",
+      "ru": "DuoFern Stick",
+      "pt": "DuoFern Stick",
+      "nl": "DuoFern Stick",
+      "fr": "DuoFern Stick",
+      "it": "DuoFern Stick",
+      "es": "DuoFern Stick",
+      "pl": "DuoFern Stick",
+      "uk": "DuoFern Stick",
+      "zh-cn": "DuoFern Stick"
     },
     "desc": {
-      "en": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "de": "Adapter für den Rademacher DuoFern USB-Stick mit persistenter Statusverarbeitung."
+      "en": "Adapter for the Rademacher DuoFern USB Stick with persistent state handling.",
+      "de": "Adapter für den Rademacher DuoFern USB-Stick mit persistenter Statusverarbeitung.",
+      "ru": "Адаптер для USB-стика Rademacher DuoFern с постоянной обработкой состояний.",
+      "pt": "Adaptador para o stick USB Rademacher DuoFern com tratamento persistente de estados.",
+      "nl": "Adapter voor de Rademacher DuoFern USB-stick met blijvende statusverwerking.",
+      "fr": "Adaptateur pour la clé USB Rademacher DuoFern avec gestion persistante des états.",
+      "it": "Adattatore per la chiavetta USB Rademacher DuoFern con gestione persistente degli stati.",
+      "es": "Adaptador para el USB Stick Rademacher DuoFern con gestión persistente de estados.",
+      "pl": "Adapter do pamięci USB Rademacher DuoFern z trwałą obsługą stanów.",
+      "uk": "Адаптер для USB-стика Rademacher DuoFern зі сталою обробкою станів.",
+      "zh-cn": "用于 Rademacher DuoFern USB Stick 的适配器，支持持久状态处理。"
     },
     "authors": [
-      ""
+      "FreeProgrammer1"
     ],
     "keywords": [
       "duofern",
@@ -20,33 +38,51 @@
       "shutter",
       "rohrmotor"
     ],
-    "license": "MIT",
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "enabled": false,
     "icon": "duofernstick.svg",
-    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/img/no-image.svg",
-    "readme": "https://github.com/",
+    "extIcon": "https://raw.githubusercontent.com/FreeProgrammer1/ioBroker.duofernstick/main/admin/duofernstick.svg",
+    "readme": "https://github.com/FreeProgrammer1/ioBroker.duofernstick/blob/main/README.md",
     "loglevel": "info",
     "type": "hardware",
     "compact": true,
     "connectionType": "local",
     "dataSource": "push",
-    "materialize": true,
     "adminUI": {
       "config": "materialize"
     },
     "dependencies": [
       {
-        "js-controller": ">=5.0.0"
+        "js-controller": ">=6.0.11"
       }
     ],
     "globalDependencies": [
       {
-        "admin": ">=6.0.0"
+        "admin": ">=7.6.17"
       }
     ],
-    "restartAdapters": []
+    "restartAdapters": [],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "tier": 3,
+    "news": {
+      "0.1.21": {
+        "en": "Initial public test package with serial communication, device detection, state handling, and basic commands.",
+        "de": "Erstes öffentliches Testpaket mit serieller Kommunikation, Geräteerkennung, Statusverarbeitung und grundlegenden Befehlen.",
+        "ru": "Первый публичный тестовый пакет с последовательной связью, обнаружением устройств, обработкой состояний и базовыми командами.",
+        "pt": "Primeiro pacote público de teste com comunicação serial, detecção de dispositivos, tratamento de estados e comandos básicos.",
+        "nl": "Eerste openbaar testpakket met seriële communicatie, apparaatdetectie, statusverwerking en basisopdrachten.",
+        "fr": "Premier paquet de test public avec communication série, détection des appareils, gestion des états et commandes de base.",
+        "it": "Primo pacchetto di test pubblico con comunicazione seriale, rilevamento dei dispositivi, gestione degli stati e comandi di base.",
+        "es": "Primer paquete público de prueba con comunicación serie, detección de dispositivos, gestión de estados y comandos básicos.",
+        "pl": "Pierwszy publiczny pakiet testowy z komunikacją szeregową, wykrywaniem urządzeń, obsługą stanów i podstawowymi poleceniami.",
+        "uk": "Перший публічний тестовий пакет із послідовним зв’язком, виявленням пристроїв, обробкою станів і базовими командами.",
+        "zh-cn": "首个公开测试包，包含串口通信、设备检测、状态处理和基本命令。"
+      }
+    }
   },
   "native": {
     "serialPort": "/dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick-if00-port0",

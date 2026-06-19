@@ -1,98 +1,90 @@
 # ioBroker Adapter: DuoFern Stick
 
-Adapter zur Anbindung des **Rademacher DuoFern USB-Sticks** an ioBroker.
+This adapter connects the **Rademacher DuoFern USB Stick** to ioBroker.
 
-Mit diesem Adapter können DuoFern-Geräte über den lokalen USB-Stick in ioBroker eingebunden, automatisch erkannt, ausgewertet und – je nach Gerätetyp – gesteuert werden. Der Adapter ist für Installationen gedacht, bei denen DuoFern-Geräte direkt ohne zusätzliche Cloud-Anbindung in ioBroker genutzt werden sollen.
+It is intended for local DuoFern installations where devices should be detected, monitored, and controlled directly through the USB stick without a cloud service.
 
-## Funktionsumfang
+## Features
 
-- Verbindung zum Rademacher DuoFern USB-Stick über eine serielle Schnittstelle
-- Konfiguration von seriellem Port, Baudrate und Dongle-Serial über die ioBroker-Admin-Oberfläche
-- Empfang und Verarbeitung von DuoFern-Telegrammen
-- automatische Anlage erkannter DuoFern-Geräte unter `devices.*`
-- Statusauswertung für viele DuoFern-Gerätetypen
-- Steuer-States für Auf, Ab, Stopp, Position, Automatikfunktionen und weitere Gerätefunktionen
-- zentrale Control-States für Pairing, Unpairing, Statusabfrage und Rohtelegramme
-- persistente Statusverarbeitung: eingehende Telegramme werden als Teil-Updates verarbeitet
-- fehlende Werte aus unvollständigen Telegrammen überschreiben vorhandene ioBroker-Werte nicht automatisch
-- Schutz gegen fehlerhafte Rücksetzung von `runningTime` auf `0`
-- optionales Logging von Rohtelegrammen zur Fehlersuche
+- Serial connection to the Rademacher DuoFern USB Stick
+- Configuration of serial port, baud rate, and dongle serial in the ioBroker Admin UI
+- Reception and parsing of DuoFern telegrams
+- Automatic creation of detected DuoFern devices below `devices.*`
+- Device type catalogue for many DuoFern device classes
+- Persistent state handling for incomplete telegrams
+- Device states for position, movement, direction, running time, automatic modes, and raw telegrams
+- Control states for pairing, unpairing, status broadcast, and raw telegram transmission
+- Optional raw telegram logging for debugging
 
-## Unterstützte Geräteklassen
+## Supported device classes
 
-Der Adapter enthält einen Geräte- und Fähigkeitenkatalog für viele DuoFern-Geräteklassen, unter anderem:
+The adapter contains a device and capability catalogue for several DuoFern classes, including:
 
-| Geräteklasse | Beispiele |
-|---|---|
-| Rollläden / Gurtwickler | RolloTron Standard, RolloTron Comfort Master/Slave |
-| Rohrmotoren | Rohrmotor, Rohrmotor-Aktor, Rohrmotor-Steuerung |
-| Jalousien / Raffstores | Troll Comfort, Troll Basis, Connect-Aktor |
-| Aktoren | Universalaktor, Steckdosenaktor, Licht-/Schaltaktoren |
-| Dimmer | Dimmaktor, Dimmer |
-| Sensoren | Sonnen-/Windsensor, Umweltsensor, Bewegungsmelder, Rauchmelder, Fenster-Tür-Kontakt |
-| Fernbedienungen / Sender | Handsender, Wandtaster, HomeTimer, Funksender UP |
-| Heizung / Thermostat | Raumthermostat, Heizkörperantrieb |
-| Tor / Spezialgeräte | SX5 / Torsteuerung |
+| Device class | Examples |
+| --- | --- |
+| Roller shutters and belt winders | RolloTron Standard, RolloTron Comfort |
+| Tubular motors | Tubular motor, tubular motor actuator, tubular motor controller |
+| Venetian blinds | Troll devices and blind-related actuators |
+| Actuators | Universal actuator, socket actuator, switching actuators |
+| Dimmers | DuoFern dimming actuators and dimmers |
+| Sensors | Sun sensor, wind sensor, environmental sensor, motion detector, smoke detector, window or door contact |
+| Remotes and transmitters | Handheld transmitters, wall buttons, timers, flush-mounted transmitters |
+| Heating devices | Room thermostat and radiator actuator |
+| Gate and special devices | SX5 and gate-related devices |
 
-Je nach Gerätetyp werden nur die passenden bzw. beobachteten States angelegt. Dadurch erscheinen nicht unnötig alle theoretischen Datenpunkte bei jedem Gerät.
+Only suitable or observed states are created for a detected device where possible. This avoids creating every theoretical datapoint for every device.
 
-## Voraussetzungen
+## Requirements
 
-- ioBroker mit aktuellem js-controller
-- Node.js 18 oder neuer
-- ioBroker Admin 6 oder neuer
-- Rademacher DuoFern USB-Stick
-- Zugriff auf die serielle Schnittstelle des USB-Sticks
+- ioBroker with js-controller 6.0.11 or newer
+- Node.js 20 or newer
+- ioBroker Admin 7.6.17 or newer
+- Rademacher DuoFern USB Stick
+- Access to the serial device of the USB stick
 
-Unter Linux muss der ioBroker-Prozess Zugriff auf das serielle Gerät haben. Häufige Pfade sind zum Beispiel:
+On Linux, the ioBroker process must have permission to access the serial device. Typical device paths are:
 
 ```text
 /dev/ttyUSB0
 /dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick-if00-port0
 ```
 
-Der stabile Pfad unter `/dev/serial/by-id/` ist zu empfehlen, weil er auch nach einem Neustart oder erneutem Einstecken des USB-Sticks gleich bleibt.
+The stable path below `/dev/serial/by-id/` is recommended because it usually remains unchanged after reconnecting the stick or restarting the host.
 
 ## Installation
 
-### Installation über ioBroker Admin
+Install the adapter through the ioBroker Admin interface.
 
-1. Adapterpaket hochladen oder über die benutzerdefinierte Installation einbinden.
-2. Adapterinstanz `duofernstick.0` anlegen.
-3. Seriellen Port in der Adapterkonfiguration eintragen.
-4. Adapter starten.
-5. Verbindung unter `duofernstick.0.info.connection` prüfen.
+Recommended ways:
 
-### Installation über die Konsole
+1. Open **ioBroker Admin**.
+2. Open **Adapters**.
+3. Use the GitHub or custom installation option.
+4. Enter the GitHub repository URL or the release asset URL for the `.tgz` package.
+5. Create an instance of `duofernstick`.
+6. Open the instance configuration and enter the correct serial port.
+7. Start the adapter and check `duofernstick.0.info.connection`.
 
-Beispiel für eine lokale Installation aus einer TGZ-Datei:
+Direct package-manager commands are intentionally not documented here because ioBroker adapters should be installed through the ioBroker Admin or ioBroker adapter installation workflow.
 
-```bash
-cd /opt/iobroker
-npm install /pfad/zur/iobroker.duofernstick-0.1.21.tgz
-iobroker add duofernstick
-```
+## Configuration
 
-Danach die Adapterkonfiguration im ioBroker Admin öffnen und den korrekten seriellen Port eintragen.
+The most important settings are available in the instance configuration.
 
-## Konfiguration
+| Setting | Description |
+| --- | --- |
+| `serialPort` | Serial port of the DuoFern USB Stick |
+| `baudRate` | Baud rate, default: `115200` |
+| `dongleSerial` | Serial number of the DuoFern stick, usually starting with `6F` |
+| `autoCreateDevices` | Automatically create detected devices |
+| `statusOnStart` | Request device status when the adapter starts |
+| `preserveUnknownValues` | Keep existing values when a telegram is incomplete |
+| `createOnlySupportedStates` | Create only supported or observed states per device |
+| `debugRaw` | Log raw telegrams for debugging |
 
-Die wichtigsten Einstellungen befinden sich in der Admin-Oberfläche der Adapterinstanz.
+## Object structure
 
-| Einstellung | Beschreibung |
-|---|---|
-| `serialPort` | Serieller Port des DuoFern USB-Sticks |
-| `baudRate` | Baudrate, Standard: `115200` |
-| `dongleSerial` | Serial des DuoFern-Sticks, beginnt üblicherweise mit `6F` |
-| `autoCreateDevices` | erkannte Geräte automatisch anlegen |
-| `statusOnStart` | beim Adapterstart Statusabfrage auslösen |
-| `preserveUnknownValues` | vorhandene Werte bei unvollständigen Telegrammen erhalten |
-| `createOnlySupportedStates` | nur passende bzw. beobachtete States pro Gerät anlegen |
-| `debugRaw` | Rohtelegramme im Log ausgeben |
-
-## Objektstruktur
-
-Nach dem Start legt der Adapter folgende Hauptbereiche an:
+After startup, the adapter creates the following main object structure:
 
 ```text
 duofernstick.0
@@ -121,158 +113,141 @@ duofernstick.0
         └── ...
 ```
 
-Die genaue Anzahl der States hängt vom erkannten Gerätetyp ab.
+The exact number of states depends on the detected device type and on observed telegrams.
 
-## Zentrale Steuerung
+## Central control states
 
-### Pairing starten
+### Start pairing
 
 ```text
 duofernstick.0.control.pair = true
 ```
 
-Startet den Pairing-Modus des Sticks.
+Starts pairing mode.
 
-### Unpairing starten
+### Start unpairing
 
 ```text
 duofernstick.0.control.unpair = true
 ```
 
-Startet den Unpairing-Modus des Sticks.
+Starts unpairing mode.
 
-### Statusabfrage senden
+### Request status broadcast
 
 ```text
 duofernstick.0.control.statusBroadcast = true
 ```
 
-Fordert eine Statusmeldung der bekannten bzw. erreichbaren Geräte an.
+Requests a status update from known or reachable devices.
 
-### Rohtelegramm senden
-
-```text
-duofernstick.0.control.raw = <HEX-TELEGRAMM>
-```
-
-Sendet ein Rohtelegramm als Hex-Wert über den Stick. Diese Funktion ist vor allem zur Fehlersuche und für Tests gedacht.
-
-## Gerätesteuerung
-
-Je nach Gerätetyp können folgende States vorhanden sein:
-
-| State | Bedeutung |
-|---|---|
-| `up` | fährt Rollladen/Jalousie hoch |
-| `down` | fährt Rollladen/Jalousie runter |
-| `stop` | stoppt die aktuelle Bewegung |
-| `toggle` | Umschaltbefehl |
-| `position` | Zielposition in Prozent |
-| `getStatus` | Status des Gerätes abfragen |
-| `manualMode` | manueller Modus |
-| `timeAutomatic` | Zeitautomatik |
-| `sunAutomatic` | Sonnenautomatik |
-| `duskAutomatic` | Dämmerungsautomatik |
-| `dawnAutomatic` | Morgenautomatik |
-| `windAutomatic` | Windautomatik |
-| `rainAutomatic` | Regenautomatik |
-| `level` | Dimm-/Schaltlevel |
-| `state` | Schaltzustand |
-
-Beispiel:
+### Send a raw telegram
 
 ```text
-duofernstick.0.devices.<deviceId>.up = true
-duofernstick.0.devices.<deviceId>.down = true
-duofernstick.0.devices.<deviceId>.stop = true
-duofernstick.0.devices.<deviceId>.position = 50
+duofernstick.0.control.raw = <HEX_TELEGRAM>
 ```
 
-## Statuswerte
+Sends a raw hexadecimal telegram through the stick. This is mainly intended for testing and debugging.
 
-Typische Statuswerte sind:
+## Device control states
 
-| State | Beschreibung |
-|---|---|
-| `position` | aktuelle Position in Prozent |
-| `moving` | Gerät bewegt sich |
-| `direction` | Bewegungsrichtung `up`, `down`, `stop` oder `unknown` |
-| `runningTime` | Laufzeit in Sekunden |
-| `lastSeen` | Zeitpunkt des letzten empfangenen Telegramms |
-| `rawTelegram` | letztes Telegramm dieses Gerätes |
-| `deviceType` | DuoFern-Gerätetyp als Code |
-| `deviceTypeName` | erkannter Gerätename |
+Depending on the device type, the following states may be available:
 
-Wichtig: Der Adapter behandelt eingehende Telegramme als Teilstatus. Wenn ein Telegramm zum Beispiel keine Laufzeit enthält, wird ein bereits vorhandener Wert nicht einfach auf `0` gesetzt.
+| State | Meaning |
+| --- | --- |
+| `up` | Move blind or shutter up |
+| `down` | Move blind or shutter down |
+| `stop` | Stop the current movement |
+| `toggle` | Toggle command |
+| `position` | Target position in percent |
+| `getStatus` | Request status from this device |
+| `manualMode` | Manual mode |
+| `timeAutomatic` | Time automatic mode |
+| `sunAutomatic` | Sun automatic mode |
+| `duskAutomatic` | Dusk automatic mode |
+| `dawnAutomatic` | Dawn automatic mode |
+| `windAutomatic` | Wind automatic mode |
+| `rainAutomatic` | Rain automatic mode |
+| `level` | Dimming or level value |
+| `state` | Switching state |
 
-## Fehlerbehebung
+## Status states
 
-### Adapter verbindet sich nicht mit dem Stick
+Typical status states are:
 
-Prüfen:
+| State | Description |
+| --- | --- |
+| `position` | Current position in percent |
+| `moving` | Device is moving |
+| `direction` | Movement direction such as `up`, `down`, `stop`, or `unknown` |
+| `runningTime` | Running time in seconds |
+| `lastSeen` | Timestamp of the last received telegram |
+| `rawTelegram` | Last telegram received from this device |
+| `deviceType` | DuoFern device type code |
+| `deviceTypeName` | Detected device name |
 
-- stimmt der serielle Port?
-- existiert der Pfad unter Linux wirklich?
-- hat der ioBroker-Benutzer Zugriff auf das Gerät?
-- ist der USB-Stick an die richtige VM bzw. den richtigen Host durchgereicht?
-- blockiert ein anderer Prozess den Port?
+Incoming telegrams are handled as partial updates. If a telegram does not contain a certain value, an already existing ioBroker state is not reset automatically.
 
-Hilfreiche Befehle unter Linux:
+## Troubleshooting
 
-```bash
+### The adapter does not connect to the USB stick
+
+Check the following points:
+
+- The configured serial port exists.
+- The ioBroker process has permission to access the serial device.
+- The USB stick is connected to the correct host or virtual machine.
+- No other process is blocking the serial port.
+- The configured baud rate is correct.
+
+Useful Linux commands:
+
+```text
 ls -l /dev/ttyUSB*
 ls -l /dev/serial/by-id/
-dmesg | grep -i tty
 ```
 
-### Keine Geräte werden angelegt
+### Devices are not created
 
-Prüfen:
+Check the following points:
 
-- ist `autoCreateDevices` aktiviert?
-- empfängt der Adapter Rohtelegramme unter `info.lastRawTelegram`?
-- ist `debugRaw` zur Analyse aktiviert?
-- wurde am DuoFern-Gerät oder an einer Fernbedienung eine Aktion ausgelöst?
+- The adapter is connected to the stick.
+- `autoCreateDevices` is enabled.
+- A DuoFern device sends a telegram or is paired.
+- Raw telegram logging can be enabled temporarily for debugging.
 
-### Werte springen oder wirken unplausibel
+### State values are incomplete
 
-Prüfen:
+DuoFern telegrams may contain only partial device information. The adapter preserves existing values when a telegram does not contain a new value for a specific state.
 
-- ob mehrere Geräte dieselbe oder falsch erkannte ID verwenden
-- ob Rohtelegramme vollständig empfangen werden
-- ob der richtige Gerätetyp erkannt wurde
-- ob das Gerät Statuswerte aktiv sendet oder nur beim Start einmal antwortet
+## Development
 
-Bei Tests sind `info.lastRawTelegram`, `devices.<deviceId>.rawTelegram` und das ioBroker-Log besonders wichtig.
+The adapter source contains the main adapter runtime in `main.js` and protocol-related helper modules below `lib/`.
 
-## Hinweise zum Betrieb
+Useful local checks:
 
-Der Adapter ist für den lokalen Betrieb mit einem direkt angeschlossenen DuoFern USB-Stick vorgesehen. Da DuoFern-Geräte je nach Typ, Firmware und Telegrammformat unterschiedlich reagieren können, sollten neue Gerätetypen zunächst beobachtet und getestet werden.
-
-Für eine Fehlersuche sind folgende Angaben hilfreich:
-
-- Adapterversion
-- ioBroker-Version
-- Node.js-Version
-- Betriebssystem / Docker / VM / Proxmox
-- verwendeter USB-Stick-Pfad
-- Gerätetyp
-- relevante Rohtelegramme
-- ioBroker-Logauszug beim Start und bei Geräteaktionen
+```text
+node --check main.js
+node --check lib/duofern-parser.js
+node --check lib/state-manager.js
+node --check lib/device-types.js
+node --check lib/commands.js
+```
 
 ## Changelog
 
 ### 0.1.21
 
-- erweiterter Geräte- und Fähigkeitenkatalog
-- automatische Geräteanlage unter `devices.*`
-- Admin-Konfiguration für seriellen Port, Baudrate, Dongle-Serial und Debug-Optionen
-- Verarbeitung eingehender Telegramme als Teil-Updates
-- Schutz gegen ungewolltes Überschreiben fehlender Werte
-- Schutz gegen Rücksetzung von `runningTime` auf `0`
-- Control-States für Pairing, Unpairing, StatusBroadcast und Raw-Telegramme
-- Steuer-States für Rollladen-, Aktor-, Dimmer-, Sensor- und Thermostatklassen
+- Added serial communication structure for the DuoFern USB Stick
+- Added parser and frame extraction logic
+- Added persistent state update handling
+- Added automatic device creation
+- Added central control states
+- Added support catalogue for multiple DuoFern device classes
+- Added Admin UI configuration
 
-## Lizenz
+## License
 
-MIT
+MIT License
+
+Copyright (c) 2026 FreeProgrammer1
