@@ -243,6 +243,18 @@ For diagnostics, the following information is useful:
 
 ## Changelog
 
+### 0.1.26
+
+- Restored the proven DuoFern runtime logic and kept compatibility with the current GitHub/ioBroker package structure.
+- Keeps support for the previous `port` configuration and the newer `serialPort` alias.
+
+
+### 0.1.23
+
+- Fixed send queue delay helper.
+- Normalized accidental double slash serial paths such as `//dev/...`.
+
+
 ### 0.1.21
 
 - Extended device and capability catalogue
