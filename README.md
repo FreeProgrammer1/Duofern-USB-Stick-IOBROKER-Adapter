@@ -254,6 +254,10 @@ For diagnostics, the following information is useful:
 - Control states for pairing, unpairing, status broadcast and raw telegrams
 - Control states for shutter, actuator, dimmer, sensor and thermostat classes
 
+Older changelog entries are kept in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
+
 ## License
 
-MIT
+MIT License
+
+Copyright (c) 2026 iobroker-community-adapters
