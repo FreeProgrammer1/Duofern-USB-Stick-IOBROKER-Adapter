@@ -32,16 +32,12 @@
       "FreeProgrammer1"
     ],
     "keywords": [
-      "iobroker-adapter",
-      "iobroker",
-      "ioBroker",
       "duofern",
       "rademacher",
       "rollotron",
       "shutter",
       "blinds",
-      "serialport",
-      "smart-home"
+      "serialport"
     ],
     "platform": "Javascript/Node.js",
     "mode": "daemon",
@@ -72,7 +68,7 @@
     "licenseInformation": {
       "type": "free",
       "license": "MIT",
-      "link": "https://opensource.org/licenses/MIT"
+      "link": "https://opensource.org/license/mit"
     },
     "news": {
       "0.1.21": {
