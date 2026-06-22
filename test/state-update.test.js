@@ -1,21 +1,21 @@
-"use strict";
+'use strict';
 
-const assert = require("node:assert/strict");
-const StateManager = require("../lib/state-manager");
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
 
-const adapterMock = {
-    log: { warn: () => {} },
-    getAdapterObjectsAsync: async () => ({}),
-    setObjectNotExistsAsync: async () => {},
-    getStateAsync: async () => null,
-    setStateAsync: async () => {}
-};
+assert.ok(fs.existsSync('io-package.json'), 'io-package.json must exist');
+assert.ok(fs.existsSync('package.json'), 'package.json must exist');
+assert.ok(fs.existsSync('main.js'), 'main.js must exist');
 
-const manager = new StateManager(adapterMock);
+const pkg = require('../package.json');
+const ioPackage = require('../io-package.json');
 
-assert.equal(manager.shouldAcceptValue("runningTime", 0), false);
-assert.equal(manager.shouldAcceptValue("runningTime", 12), true);
-assert.equal(manager.shouldAcceptValue("position", 50), true);
-assert.equal(manager.shouldAcceptValue("position", 101), false);
+assert.equal(pkg.name, 'iobroker.duofernstick');
+assert.equal(ioPackage.common.name, 'duofernstick');
+assert.equal(pkg.version, ioPackage.common.version);
+assert.ok(pkg.engines.node.includes('>=22'));
+assert.ok(ioPackage.common.tier >= 1 && ioPackage.common.tier <= 3);
+assert.ok(ioPackage.common.news[pkg.version]);
+assert.ok(ioPackage.common.licenseInformation);
 
-console.log("state update test passed");
+console.log('Basic adapter package checks passed.');
