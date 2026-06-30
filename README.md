@@ -243,6 +243,13 @@ For diagnostics, the following information is useful:
 
 ## Changelog
 
+
+### 0.1.27
+
+- Added jsonConfig i18n files for all required ioBroker languages.
+- Removed legacy Materialize admin page because jsonConfig is used.
+- Replaced plain timers with adapter timers for ioBroker checker compliance.
+
 ### 0.1.26
 
 - Restored the proven DuoFern runtime logic and kept compatibility with the current GitHub/ioBroker package structure.

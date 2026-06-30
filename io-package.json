@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "duofernstick",
-    "version": "0.1.26",
+    "version": "0.1.27",
     "titleLang": {
       "en": "DuoFern Stick",
       "de": "DuoFern Stick",
@@ -137,7 +137,7 @@
         "zh-cn": "通过在发送 Stick 命令前注册响应等待器，修复初始化竞态问题。"
       },
       "0.1.26": {
-        "en": "Restore the DuoFern runtime and keep compatibility with the current GitHub adapter structure.",
+        "en": "Restore the proven DuoFern runtime and keep compatibility with the current GitHub adapter structure.",
         "de": "Bewährte DuoFern-Laufzeitlogik wiederhergestellt und mit der aktuellen GitHub-Adapterstruktur kompatibel gemacht.",
         "ru": "Восстановлена проверенная среда выполнения DuoFern с сохранением совместимости с текущей структурой адаптера GitHub.",
         "pt": "Restaurado o runtime DuoFern comprovado mantendo a compatibilidade com a estrutura atual do adaptador no GitHub.",
@@ -148,6 +148,19 @@
         "pl": "Przywrócono sprawdzone środowisko DuoFern z zachowaniem zgodności z bieżącą strukturą adaptera GitHub.",
         "uk": "Відновлено перевірену логіку виконання DuoFern із сумісністю з поточною структурою адаптера GitHub.",
         "zh-cn": "恢复经过验证的 DuoFern 运行逻辑，并保持与当前 GitHub 适配器结构兼容。"
+      },
+      "0.1.27": {
+        "en": "Added jsonConfig translations, removed legacy admin page and replaced plain timers with adapter timers for ioBroker checker compliance.",
+        "de": "jsonConfig-Übersetzungen ergänzt, alte Admin-Seite entfernt und direkte Timer durch Adapter-Timer für ioBroker-Checker-Konformität ersetzt.",
+        "ru": "Добавлены переводы jsonConfig, удалена устаревшая страница admin и прямые таймеры заменены таймерами адаптера для соответствия проверке ioBroker.",
+        "pt": "Adicionadas traduções jsonConfig, removida a página admin antiga e substituídos temporizadores diretos por temporizadores do adaptador para conformidade com o verificador ioBroker.",
+        "nl": "jsonConfig-vertalingen toegevoegd, verouderde adminpagina verwijderd en directe timers vervangen door adaptertimers voor ioBroker-checkercompatibiliteit.",
+        "fr": "Ajout des traductions jsonConfig, suppression de l’ancienne page admin et remplacement des minuteurs directs par des minuteurs d’adaptateur pour la conformité au vérificateur ioBroker.",
+        "it": "Aggiunte le traduzioni jsonConfig, rimossa la vecchia pagina admin e sostituiti i timer diretti con i timer dell’adapter per la conformità al checker ioBroker.",
+        "es": "Añadidas traducciones jsonConfig, eliminada la página admin antigua y sustituidos temporizadores directos por temporizadores del adaptador para cumplir con el comprobador ioBroker.",
+        "pl": "Dodano tłumaczenia jsonConfig, usunięto starą stronę admin i zastąpiono bezpośrednie timery timerami adaptera dla zgodności z kontrolerem ioBroker.",
+        "uk": "Додано переклади jsonConfig, видалено застарілу сторінку admin і замінено прямі таймери таймерами адаптера для відповідності перевірці ioBroker.",
+        "zh-cn": "添加 jsonConfig 翻译，移除旧版管理页面，并将直接定时器替换为适配器定时器，以符合 ioBroker 检查要求。"
       }
     }
   },

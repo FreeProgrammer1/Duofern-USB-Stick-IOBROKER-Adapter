@@ -400,7 +400,7 @@ class Duofernstick extends utils.Adapter {
             return;
         }
         const delay = Math.max(1000, Number(this.config.reconnectIntervalMs || 10000));
-        this.reconnectTimer = setTimeout(() => {
+        this.reconnectTimer = this.setTimeout(() => {
             this.reconnectTimer = null;
             if (!this.isUnloaded) {
                 this.log.info('Trying to reconnect DuoFern stick');
@@ -433,7 +433,7 @@ class Duofernstick extends utils.Adapter {
         this.log.info('Reopening serial port');
         this.reopening = true;
         if (this.reconnectTimer) {
-            clearTimeout(this.reconnectTimer);
+            this.clearTimeout(this.reconnectTimer);
             this.reconnectTimer = null;
         }
         await this.closeSerialPort();
@@ -448,7 +448,7 @@ class Duofernstick extends utils.Adapter {
         }
 
         if (this.flushTimer) {
-            clearTimeout(this.flushTimer);
+            this.clearTimeout(this.flushTimer);
             this.flushTimer = null;
         }
 
@@ -461,7 +461,7 @@ class Duofernstick extends utils.Adapter {
 
         if (this.partial.length > 0) {
             const timeout = Math.max(100, Number(this.config.flushPartialMs || 500));
-            this.flushTimer = setTimeout(() => {
+            this.flushTimer = this.setTimeout(() => {
                 if (this.partial) {
                     this.log.warn(`Discarding incomplete DuoFern buffer: ${this.partial}`);
                     this.partial = '';
@@ -522,11 +522,11 @@ class Duofernstick extends utils.Adapter {
         }
 
         if (/^0602/i.test(raw) && this.pairTimer) {
-            clearTimeout(this.pairTimer);
+            this.clearTimeout(this.pairTimer);
             this.pairTimer = null;
             await this.setStateSafe('pair.mode', 'off', true);
         } else if (/^0603/i.test(raw) && this.unpairTimer) {
-            clearTimeout(this.unpairTimer);
+            this.clearTimeout(this.unpairTimer);
             this.unpairTimer = null;
             await this.setStateSafe('pair.mode', 'off', true);
         }
@@ -568,7 +568,7 @@ class Duofernstick extends utils.Adapter {
             // Geräte kurz danach gezielt abgefragt.
             if (this.config.externalActivityPollAll !== false && /^(06|0F)/i.test(raw) && /^(07|0E)/i.test(raw.substring(4, 8))) {
                 await this.setStateSafe('info.lastExternalRefresh', JSON.stringify({ device: null, reason: 'unparsed-external-telegram', time: new Date().toISOString() }), true);
-                setTimeout(() => {
+                this.setTimeout(() => {
                     if (!this.isUnloaded) void this.pollKnownDeviceStatuses('unparsed-external');
                 }, 2500);
             }
@@ -614,10 +614,10 @@ class Duofernstick extends utils.Adapter {
         };
         await this.setStateSafe('info.externalRefreshCount', this.externalRefreshCount, true);
         await this.setStateSafe('info.lastExternalRefresh', JSON.stringify(info), true);
-        setTimeout(() => {
+        this.setTimeout(() => {
             if (!this.isUnloaded) void this.pollKnownDeviceStatuses(reason);
         }, 1500);
-        setTimeout(() => {
+        this.setTimeout(() => {
             if (!this.isUnloaded) void this.pollKnownDeviceStatuses(`${reason}-late`);
         }, 8000);
     }
@@ -644,7 +644,7 @@ class Duofernstick extends utils.Adapter {
         // Bewegungs-Telegramm, nicht aber den vollständigen Endstatus. Darum optional alle
         // bekannten Aktoren kurz nachpolling, damit auch Rohrmotor-Aktoren aktuelle Werte bekommen.
         if (this.config.externalActivityPollAll !== false) {
-            setTimeout(() => {
+            this.setTimeout(() => {
                 if (!this.isUnloaded) void this.pollKnownDeviceStatuses('external-activity');
             }, 2500);
         }
@@ -897,7 +897,7 @@ class Duofernstick extends utils.Adapter {
 
         const timeoutMs = Math.max(500, Number(this.config.readAnswerTimeoutMs || this.config.commandTimeoutMs || 1000));
         const answerPromise = new Promise((resolve, reject) => {
-            const timer = setTimeout(() => {
+            const timer = this.setTimeout(() => {
                 if (this.readAnswerWaiter && this.readAnswerWaiter.label === label) {
                     this.readAnswerWaiter = null;
                 }
@@ -923,7 +923,7 @@ class Duofernstick extends utils.Adapter {
             return;
         }
         this.readAnswerWaiter = null;
-        clearTimeout(waiter.timer);
+        this.clearTimeout(waiter.timer);
         this.log.debug(`readAnswer (${waiter.label}) <- ${frame}`);
         waiter.resolve(frame);
     }
@@ -934,7 +934,7 @@ class Duofernstick extends utils.Adapter {
             return;
         }
         this.readAnswerWaiter = null;
-        clearTimeout(waiter.timer);
+        this.clearTimeout(waiter.timer);
         waiter.reject(error);
     }
 
@@ -984,7 +984,7 @@ class Duofernstick extends utils.Adapter {
         }
 
         const timeout = Math.max(1000, Number(this.config.commandTimeoutMs || 5000));
-        this.currentTimer = setTimeout(() => {
+        this.currentTimer = this.setTimeout(() => {
             const name = this.currentItem ? this.currentItem.name : 'unknown';
             this.log.warn(`Timeout while waiting for DuoFern answer/ACK for ${name}; continuing queue`);
             void this.finishCurrentItem('timeout');
@@ -1005,7 +1005,7 @@ class Duofernstick extends utils.Adapter {
 
     clearCurrentTimer() {
         if (this.currentTimer) {
-            clearTimeout(this.currentTimer);
+            this.clearTimeout(this.currentTimer);
             this.currentTimer = null;
         }
     }
@@ -1199,15 +1199,15 @@ class Duofernstick extends utils.Adapter {
 
     async startPairMode() {
         if (this.unpairTimer) {
-            clearTimeout(this.unpairTimer);
+            this.clearTimeout(this.unpairTimer);
             this.unpairTimer = null;
         }
         if (this.pairTimer) {
-            clearTimeout(this.pairTimer);
+            this.clearTimeout(this.pairTimer);
         }
         this.enqueueSend(protocol.constants.duoStartPair, { name: 'pair' });
         await this.setStateSafe('pair.mode', 'pair', true);
-        this.pairTimer = setTimeout(() => {
+        this.pairTimer = this.setTimeout(() => {
             this.pairTimer = null;
             this.enqueueSend(protocol.constants.duoStopPair, { name: 'stopPair' });
             void this.setStateSafe('pair.mode', 'off', true);
@@ -1216,15 +1216,15 @@ class Duofernstick extends utils.Adapter {
 
     async startUnpairMode() {
         if (this.pairTimer) {
-            clearTimeout(this.pairTimer);
+            this.clearTimeout(this.pairTimer);
             this.pairTimer = null;
         }
         if (this.unpairTimer) {
-            clearTimeout(this.unpairTimer);
+            this.clearTimeout(this.unpairTimer);
         }
         this.enqueueSend(protocol.constants.duoStartUnpair, { name: 'unpair' });
         await this.setStateSafe('pair.mode', 'unpair', true);
-        this.unpairTimer = setTimeout(() => {
+        this.unpairTimer = this.setTimeout(() => {
             this.unpairTimer = null;
             this.enqueueSend(protocol.constants.duoStopUnpair, { name: 'stopUnpair' });
             void this.setStateSafe('pair.mode', 'off', true);
@@ -1320,16 +1320,16 @@ class Duofernstick extends utils.Adapter {
         };
         // Kurz nach dem Start noch einmal abfragen, weil der globale Startstatus nicht bei allen Aktoren
         // dieselben Detailwerte liefert wie eine gezielte Abfrage des einzelnen Gerätes.
-        this.periodicStatusPollTimer = setTimeout(() => {
+        this.periodicStatusPollTimer = this.setTimeout(() => {
             run();
-            this.periodicStatusPollTimer = setInterval(run, interval);
+            this.periodicStatusPollTimer = this.setInterval(run, interval);
         }, 8000);
     }
 
     stopPeriodicStatusPolling() {
         if (this.periodicStatusPollTimer) {
-            clearTimeout(this.periodicStatusPollTimer);
-            clearInterval(this.periodicStatusPollTimer);
+            this.clearTimeout(this.periodicStatusPollTimer);
+            this.clearInterval(this.periodicStatusPollTimer);
             this.periodicStatusPollTimer = null;
         }
     }
@@ -1347,7 +1347,7 @@ class Duofernstick extends utils.Adapter {
         try {
             let delay = 0;
             for (const code of codes) {
-                setTimeout(() => {
+                this.setTimeout(() => {
                     if (this.isUnloaded) return;
                     try {
                         this.enqueueSend(protocol.buildStatusRequest(code, 'getStatus'), { name: `${code} ${reason} getStatus` });
@@ -1357,7 +1357,7 @@ class Duofernstick extends utils.Adapter {
                 }, delay);
                 delay += 450;
             }
-            setTimeout(() => { this.periodicStatusPollActive = false; }, Math.max(1000, codes.length * 500));
+            this.setTimeout(() => { this.periodicStatusPollActive = false; }, Math.max(1000, codes.length * 500));
         } catch (error) {
             this.periodicStatusPollActive = false;
             this.log.debug(`Periodic status poll failed: ${error.message}`);
@@ -1373,7 +1373,7 @@ class Duofernstick extends utils.Adapter {
             : movement.has(reason)
                 ? [3000, 12000, 30000, 60000]
                 : [1500, 5000, 12000];
-        const timers = delays.map(delay => setTimeout(() => {
+        const timers = delays.map(delay => this.setTimeout(() => {
             if (this.isUnloaded) return;
             this.enqueueSend(protocol.buildStatusRequest(deviceCode, 'getStatus'), { name: `${deviceCode} delayed getStatus ${reason} +${delay}ms` });
         }, delay));
@@ -1383,7 +1383,7 @@ class Duofernstick extends utils.Adapter {
     clearStatusRefreshTimers(code) {
         const deviceCode = protocol.normalizeDeviceCode(code).substring(0, 6).toUpperCase();
         const timers = this.statusRefreshTimers.get(deviceCode) || [];
-        for (const timer of timers) clearTimeout(timer);
+        for (const timer of timers) this.clearTimeout(timer);
         this.statusRefreshTimers.delete(deviceCode);
     }
 
@@ -1728,25 +1728,25 @@ class Duofernstick extends utils.Adapter {
         try {
             this.isUnloaded = true;
             if (this.flushTimer) {
-                clearTimeout(this.flushTimer);
+                this.clearTimeout(this.flushTimer);
                 this.flushTimer = null;
             }
             if (this.reconnectTimer) {
-                clearTimeout(this.reconnectTimer);
+                this.clearTimeout(this.reconnectTimer);
                 this.reconnectTimer = null;
             }
             if (this.pairTimer) {
-                clearTimeout(this.pairTimer);
+                this.clearTimeout(this.pairTimer);
                 this.pairTimer = null;
             }
             if (this.unpairTimer) {
-                clearTimeout(this.unpairTimer);
+                this.clearTimeout(this.unpairTimer);
                 this.unpairTimer = null;
             }
             this.clearCurrentTimer();
             this.stopPeriodicStatusPolling();
             for (const timers of this.statusRefreshTimers.values()) {
-                for (const timer of timers) clearTimeout(timer);
+                for (const timer of timers) this.clearTimeout(timer);
             }
             this.statusRefreshTimers.clear();
             this.externalRefreshLast.clear();
